@@ -69,17 +69,29 @@ function fallbackGenerate(state, data) {
   return lines.join('\n');
 }
 
+
 function pickSymbolSet(data, type) {
-  if (!data) return ['.', '*', ' '];
-  // try common shapes
-  if (Array.isArray(data.symbols?.[type])) return data.symbols[type];
-  if (Array.isArray(data.SYMBOLS?.[type])) return data.SYMBOLS[type];
-  if (Array.isArray(data.symbolsDefault))   return data.symbolsDefault;
-  // flatten any first array in symbols map
-  const values = data.symbols ? Object.values(data.symbols) : [];
-  for (const v of values) if (Array.isArray(v) && v.length) return v;
+  // Accept multiple schemas:
+  // A) data = { [type]: { symbols: [...] } }
+  if (data && typeof data === 'object' && data[type] && Array.isArray(data[type].symbols)) {
+    return data[type].symbols;
+  }
+  // B) data = { symbols: { [type]: [...] } }
+  if (Array.isArray(data?.symbols?.[type])) return data.symbols[type];
+  if (Array.isArray(data?.SYMBOLS?.[type])) return data.SYMBOLS[type];
+  if (Array.isArray(data?.symbolsDefault))   return data.symbolsDefault;
+
+  // C) Try to find any first symbols array somewhere
+  if (data && typeof data === 'object') {
+    for (const v of Object.values(data)) {
+      if (v && typeof v === 'object' && Array.isArray(v.symbols)) return v.symbols;
+    }
+  }
+
+  // D) Fallback
   return ['.', '*', ' '];
 }
+
 
 function randomFromSet(set) {
   // Allow weighted tuples like ['.', '.', '.', '*']
