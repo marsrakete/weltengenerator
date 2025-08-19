@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/x-icon" href="icons/favicon.ico">
+
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" sizes="57x57" href="icons/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="icons/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="icons/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="icons/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="icons/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="icons/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="icons/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-icon-180x180.png">
+
+  <!-- Android Manifest -->
+  <link rel="manifest" href="icons/manifest.json">
+  <meta name="theme-color" content="#121212">
+  
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Weltgenerator</title>
+  <link rel="stylesheet" href="./common.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="./common.js"></script>
+  <script src="./worldData.js"></script>
+  
+</head>
+<body>
+  <!-- Zoom-Slider -->
+  <div class="slider-group">
+    <label for="zoomSlider">Zoom</label>
+    <input type="range" id="zoomSlider" min="1" max="3" step="0.1" value="2" oninput="updateZoom(this.value)">
+    <span id="zoomPercentage">200%</span>
+    <label for="maxSymbolsSlider"> | Symbols</label>
+    <input type="range" id="maxSymbolsSlider" min="10" max="100" value="50">
+    <span id="maxSymbolsValue">50</span>    
+  </div>
+  <div id="settingsMenu" class="settings-container">
+    <button id="settingsToggleBtn" title="Einstellungen">⚙️</button>
+    <div id="settingsDropdown" class="dropdown hidden">
+      <button id="toggleAnimationsBtn">✨ Animationen</button>
+      <button id="langSwitchBtn">🌐 Sprache: DE</button>
+    </div>
+  </div>
+  <!-- Normale Status-Toasts (unten) -->
+  <div id="toast-container" class="toast-container"></div>
+  <!-- Modaler Overlay + Dialog (zentriert) -->
+  <div id="modal-overlay" class="modal-overlay" hidden></div>
+  <div id="dialog-toast" class="toast dialog" style="display: none;"></div>
+  <!-- Spielcontainer -->
+  <div id="gameContainer">
+    <!-- h1>Spielmodus</h1 -->
+    <div id="cometOverlay"></div>
+    <div id="gameInfo"></div>
+    <div id="statusLine">
+      <span id="timerDisplay">Zeit: 0 s</span> |
+      <span id="foundCount">Gefundene Ziele: 0</span>
+    </div>
+    <div class="overlay-wrapper" style="position: relative;">
+      <div id="gameOutput"> ... </div>
+    </div>
+    <div id="virtualButtons">
+      <button onclick="movePlayer(0,-1)">↑</button><br>
+      <button onclick="movePlayer(-1,0)">←</button>
+      <button onclick="movePlayer(1,0)">→</button><br>
+      <button onclick="movePlayer(0,1)">↓</button>
+    </div>
+    <div id="swipeHint" style="font-size: 0.9em; color: #ccc; margin-top: 10px;">
+      👉 Tipp: Wische über das Spielfeld zum Bewegen!
+    </div>
+    <button id="toggleModeGame" class="button-chip">Zum Editor</button>
+    <button id="newRandomGame" class="button-chip">Spiel zufällig neu generieren</button>
+    <button id="generateGameAltText" class="button-chip">ALT Text generieren</button>
+    <button id="copyGameGraphic" class="button-chip" style="display:none">Als Grafik kopieren</button>
+    <button id="copyGameText" class="button-chip">Als Text kopieren</button>
+    <button id="generateGamePermalink" class="button-chip">Permalink erzeugen</button>
+    <button id="postToBsky" class="button-chip">Auf BlueSky posten</button>
+    <hr>
+    <div id="worldCount"></div>
+    <div id="worldGallery"></div>    
+  </div>
+
+  <!-- Editorcontainer -->
+  <div id="editorContainer" style="display:none;">
+    <h1>Editormodus</h1>
+    <div id="playerTargetInfo"></div>
+    <div id="symbolPalette"></div>
+    <h2>Ausgabefeld</h2>
+    <div id="editorOutput"></div>
+    <button id="toggleModeEditor" class="button-chip">Zum Spiel</button>
+    <button id="clearGrid"class="button-chip">Grid leeren</button>
+    <button id="newEditorRandom"class="button-chip">Welt zufällig neu generieren</button>
+    <button id="generateEditorAltText"class="button-chip">ALT Text generieren</button>
+    <!-- button id="applyToGame">In Spiel übernehmen</button -->
+    <button id="copyEditorGraphic" style="display:none" class="button-chip">Als Grafik kopieren</button>
+    <button id="copyEditorText"class="button-chip">Als Text kopieren</button>
+    <hr>
+    <div id="worldCount"></div>
+    <div id="worldButtonsEditor"></div>
+  </div>
+  <script src="./main.js"></script>
+</body>
+</html>
